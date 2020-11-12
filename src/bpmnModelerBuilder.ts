@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { getNonce } from './utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CamundaModdleDescriptor = require('camunda-bpmn-moddle/resources/camunda.json');
@@ -11,10 +12,13 @@ const processTemplate = require('./assets/processTemplate.json');
 export class BpmnModelerBuilder {
   contents: string;
   resources: any;
+  webview: vscode.Webview;
 
-  public constructor(contents: string, resources: any) {
+
+  public constructor(contents: string, webview: vscode.Webview, resources: any) {
     this.contents = contents;
     this.resources = resources;
+    this.webview = webview;
   }
 
   private removeNewLines(contents: string): string {
@@ -28,6 +32,8 @@ export class BpmnModelerBuilder {
       <html>
         <head>
           <meta charset="UTF-8" />
+
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
           <title>Magnetron Feature Modeler</title>
 
@@ -194,7 +200,7 @@ export class EditingProvider {
 
     const contents = fs.readFileSync(localDocumentPath, { encoding: 'utf8' });
 
-    const builder = new BpmnModelerBuilder(contents, {
+    const builder = new BpmnModelerBuilder(contents, webview, {
       propertyPanel: this.getUri(webview, 'out', 'propertyPanel.js'),
       propertyProvider: this.getUri(webview, 'out', 'propertyProvider.js'),
       modelerDistro: this.getUri(webview, 'node_modules', 'bpmn-js', 'dist', 'bpmn-modeler.development.js'),
