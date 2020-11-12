@@ -71,8 +71,8 @@ export class BPMNEditorProvider implements vscode.CustomTextEditorProvider {
 
 		// Receive message from the webview.
 		webviewPanel.webview.onDidReceiveMessage(e => {
-			switch (e.type) {
-				case 'saveContent':
+			switch (e.command) {
+				case 'contentChanged':
 					return this.updateTextDocument(document, e.content);
 			}
 		});
@@ -92,7 +92,7 @@ export class BPMNEditorProvider implements vscode.CustomTextEditorProvider {
 	/**
 	 * Write out the json to a given document.
 	 */
-	private updateTextDocument(document: vscode.TextDocument, json: any) {
+	private updateTextDocument(document: vscode.TextDocument, xml: any) {
 		const edit = new vscode.WorkspaceEdit();
 
 		// Just replace the entire document every time for this example extension.
@@ -100,7 +100,7 @@ export class BPMNEditorProvider implements vscode.CustomTextEditorProvider {
 		edit.replace(
 			document.uri,
 			new vscode.Range(0, 0, document.lineCount, 0),
-			JSON.stringify(json, null, 2));
+			xml);
 
 		return vscode.workspace.applyEdit(edit);
 	}

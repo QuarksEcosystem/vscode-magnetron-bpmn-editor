@@ -3,6 +3,11 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CamundaModdleDescriptor = require('camunda-bpmn-moddle/resources/camunda.json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const processTemplate = require('./assets/processTemplate.json');
+
 export class BpmnModelerBuilder {
   contents: string;
   resources: any;
@@ -61,21 +66,20 @@ export class BpmnModelerBuilder {
         </div>
 
         <script>
-
           const vscode = acquireVsCodeApi();
-
+        
           // (1) persist web view state
-          vscode.setState({ resourcePath: '${this.resources.resourceUri}'});
-
+          vscode.setState({ resourcePath: '${this.resources.resourceUri}' });
+        
           // (2) react on messages from outside
           window.addEventListener('message', (event) => {
             const message = event.data;
-
-            switch(message) {
+        
+            switch (message) {
               case 'saveFile': saveChanges(); break;
             }
           })
-
+        
           // (3) bootstrap modeler instance
           const bpmnModeler = new BpmnJS({
             container: '#canvas',
@@ -87,38 +91,39 @@ export class BpmnModelerBuilder {
             propertiesPanel: {
               parent: '#properties'
             },
-            elementTemplates: ${JSON.stringify(this.resources.processTemplate)},
+            elementTemplates: ${JSON.stringify(processTemplate)},
             moddleExtensions: {
-              camunda: ${JSON.stringify(this.resources.camundaModdleDescriptor)}
+              camunda: ${JSON.stringify(CamundaModdleDescriptor)}
             }
           });
-
+        
           keyboardBindings();
-
+        
           /**
            * Open diagram in our modeler instance.
            *
            * @param {String} bpmnXML diagram to display
            */
           async function openDiagram(bpmnXML) {
-
-            bpmnModeler.importXML(bpmnXML, function(err) {
+        
+            bpmnModeler.importXML(bpmnXML, function (err) {
               if (err) {
-                console.log('could not import BPMN 2.0 diagram', err, warning);
+                console.log('could not import BPMN 2.0 diagram', err);
               } else {
                 const canvas = bpmnModeler.get('canvas');
                 canvas.zoom('fit-viewport');
-
+        
                 listenChanges();
               }
             });
           }
-
-          function saveDiagramChanges() {
+        
+          function diagramChanges(command) {
             try {
               return bpmnModeler.saveXML({ format: true }, (err, xml) => {
+                console.log(xml);
                 vscode.postMessage({
-                  command: 'saveContent',
+                  command: command,
                   content: xml
                 });
               });
@@ -126,44 +131,40 @@ export class BpmnModelerBuilder {
               console.error('could not save BPMN 2.0 diagram', err);
             }
           }
-
+        
           function saveChanges() {
             const spinner = document.getElementsByClassName("spinner")[0];
             spinner.classList.add("active");
-
-            saveDiagramChanges();
-
-            setTimeout(function() {
+        
+            setTimeout(function () {
               spinner.classList.remove("active");
             }, 1000);
           }
-
+        
           function keyboardBindings() {
             const keyboard = bpmnModeler.get('keyboard');
-
-            keyboard.addListener(function(context) {
-
+        
+            keyboard.addListener(function (context) {
+        
               const event = context.keyEvent;
-
+        
               if (keyboard.isKey(['s', 'S'], event) && keyboard.isCmd(event)) {
                 saveChanges();
                 return true;
               }
             });
           }
-
+        
           function listenChanges() {
             const eventBus = bpmnModeler.get('eventBus');
-            eventBus.on('commandStack.changed', function() {
-              vscode.postMessage({
-                command: 'contentChanged',
-                content: ''
-              });
+            eventBus.on('commandStack.changed', function () {
+              diagramChanges('contentChanged')
             });
           }
-
+        
           // open diagram
           openDiagram('${this.contents}');
+          
         </script>
       </body>
     `;
