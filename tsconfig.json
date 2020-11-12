@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2019",
+		"lib": ["ES2019"],
+		"outDir": "out",
+		"sourceMap": true,
+		"strict": true, /* enable all strict type-checking options */
+    "declaration": true,
+		"rootDir": "src",
+		"allowJs": true,
+	},
+	"include": [
+		"src/*.ts",
+	],
+	
+}

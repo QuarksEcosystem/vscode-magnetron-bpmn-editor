@@ -1,0 +1,339 @@
+[
+  {
+    "id": "hubProcess",
+    "name": "Hub Process",
+    "isDefault": true,
+    "appliesTo": [
+      "bpmn:Process"
+    ],
+    "properties": [
+      {
+        "type": "Hidden",
+        "value": true,
+        "binding": {
+          "type": "property",
+          "name": "isExecutable"
+        }
+      },
+      {
+        "label": "Validate Long Running Unicity",
+        "description": "Define se haverá validação de unicidade para a execução do fluxo <u>Long Running</u>, mediante chave definida para o mesmo",
+        "type": "Boolean",
+        "value": false,
+        "binding": {
+          "type": "camunda:property",
+          "name": "validateLongRunningUnicity"
+        }
+      },
+      {
+        "label": "Long Running Unicity Key",
+        "description": "Chave para validação de unicidade do fluxo <u>Long Running</u> (<b>Separador:</b> <b>;</b> [<u>ponto e vírgula</u>]) <br><br><b>Chave reservada para acesso ao instance-id:</b> $.processBusinessId<br><br><b>Exemplos:</b><ul><li>$.processBusinessId</li><li>$.processBusinessId;$.id</li><li>$.order.number;$.requestHeaders.correlationId</li></ul>",
+        "type": "String",
+        "binding": {
+          "type": "camunda:property",
+          "name": "longRunningUnicityKey"
+        },
+        "constraints": {
+          "notEmpty": false
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "process-is-executable": false,
+      "externalTaskPriority": false,
+      "jobPriority": false,
+      "historyTimeToLive": false,
+      "executionListeners": false,
+      "properties": false,
+      "elementTemplate-chooser": false,
+      "variables": false
+    }
+  },
+  {
+    "id": "hubConditionalFlow",
+    "name": "Hub Conditional Flow",
+    "isDefault": false,
+    "appliesTo": [
+      "bpmn:SequenceFlow"
+    ],
+    "properties": [
+      {
+        "label": "Filter Path",
+        "description": "Path para filtro no contexto de dados (ex: $.pessoa.nome)",
+        "type": "String",
+        "binding": {
+          "type": "camunda:property",
+          "name": "filterPath"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Filter Expression",
+        "description": "Expressão a ser aplicada no contexto de dados (ex: '==')",
+        "type": "Dropdown",
+        "value": "==",
+        "choices": [
+          {
+            "name": "==",
+            "value": "=="
+          },
+          {
+            "name": "=~ (equals with ignore case)",
+            "value": "=~"
+          },
+          {
+            "name": ">",
+            "value": ">"
+          },
+          {
+            "name": ">=",
+            "value": ">="
+          },
+          {
+            "name": "<",
+            "value": "<"
+          },
+          {
+            "name": "<=",
+            "value": "<="
+          },
+          {
+            "name": "!=",
+            "value": "!="
+          },
+          {
+            "name": "contains",
+            "value": "contains"
+          },
+          {
+            "name": "not contains",
+            "value": "not contains"
+          },
+          {
+            "name": "regex",
+            "value": "regex"
+          },
+          {
+            "name": "not regex",
+            "value": "not regex"
+          },
+          {
+            "name": "in",
+            "value": "in"
+          },
+          {
+            "name": "not in",
+            "value": "not in"
+          },
+          {
+            "name": "range",
+            "value": "range"
+          },
+          {
+            "name": "not range",
+            "value": "not range"
+          },
+          {
+            "name": "starts with",
+            "value": "starts with"
+          },
+          {
+            "name": "ends with",
+            "value": "ends with"
+          }
+        ],
+        "binding": {
+          "type": "camunda:property",
+          "name": "filterExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Filter Value or Filter Path",
+        "description": "Valor do filtro <br><br><b>Exemplos:</b><ul><li>$.pessoa.idade</li><li>'fulano de tal'</li><li>'a,b,c'</li><li>100</li><li>'100..200' (range)</li><li>'\\d{4}' (regex)</li></ul>",
+        "type": "String",
+        "binding": {
+          "type": "camunda:property",
+          "name": "filterValue"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "properties": false,
+      "extensionElements": false,
+      "listeners": false,
+      "executionListeners": false,
+      "details": false,
+      "condition": false
+    }
+  },
+  {
+    "id": "hubSimpleConditionalFlow",
+    "name": "Hub Simple Conditional Flow",
+    "isDefault": false,
+    "appliesTo": [
+      "bpmn:SequenceFlow"
+    ],
+    "properties": [
+      {
+        "label": "Filter Expression",
+        "description": "Expressão para filtro no contexto de dados <br><br><b>Exemplos de uso:</b><br><ul><li><u>Verifica existência de nó</u><br><b>$.pessoa.nome</b><br><br></li><li><u>Verifica no array de steps se existe algum item com nome igual a 'ABC'</u><br><b>steps.name == 'ABC'</b></li></ul>",
+        "type": "String",
+        "binding": {
+          "type": "camunda:property",
+          "name": "simpleFilterExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "properties": false,
+      "extensionElements": false,
+      "listeners": false,
+      "executionListeners": false,
+      "details": false,
+      "condition": false
+    }
+  },
+  {
+    "id": "hubBoundaryEvent",
+    "name": "Hub Boundary Event",
+    "isDefault": true,
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "properties": [
+      {
+        "label": "Filter Path",
+        "description": "Path para filtro no contexto de dados (ex: $.pessoa.nome)",
+        "type": "String",
+        "binding": {
+          "type": "camunda:property",
+          "name": "filterPath"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Filter Expression",
+        "description": "Expressão a ser aplicada no contexto de dados (ex: '==')",
+        "type": "Dropdown",
+        "value": "==",
+        "choices": [
+          {
+            "name": "==",
+            "value": "=="
+          },
+          {
+            "name": "=~ (equals with ignore case)",
+            "value": "=~"
+          },
+          {
+            "name": ">",
+            "value": ">"
+          },
+          {
+            "name": ">=",
+            "value": ">="
+          },
+          {
+            "name": "<",
+            "value": "<"
+          },
+          {
+            "name": "<=",
+            "value": "<="
+          },
+          {
+            "name": "!=",
+            "value": "!="
+          },
+          {
+            "name": "contains",
+            "value": "contains"
+          },
+          {
+            "name": "not contains",
+            "value": "not contains"
+          },
+          {
+            "name": "regex",
+            "value": "regex"
+          },
+          {
+            "name": "not regex",
+            "value": "not regex"
+          },
+          {
+            "name": "in",
+            "value": "in"
+          },
+          {
+            "name": "not in",
+            "value": "not in"
+          },
+          {
+            "name": "range",
+            "value": "range"
+          },
+          {
+            "name": "not range",
+            "value": "not range"
+          },
+          {
+            "name": "starts with",
+            "value": "starts with"
+          },
+          {
+            "name": "ends with",
+            "value": "ends with"
+          }
+        ],
+        "binding": {
+          "type": "camunda:property",
+          "name": "filterExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Filter Value",
+        "description": "Valor do filtro <br><br><b>Exemplos:</b><ul><li>'fulano de tal'</li><li>'a,b,c'</li><li>100</li><li>'100..200' (range)</li><li>'\\d{4}' (regex)</li></ul>",
+        "type": "String",
+        "binding": {
+          "type": "camunda:property",
+          "name": "filterValue"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "properties": false,
+      "extensionElements": false,
+      "listeners": false,
+      "executionListeners": false,
+      "asyncAfter": false,
+      "asyncBefore": false,
+      "exclusive": false,
+      "errorCodeVariable": false,
+      "errorMessageVariable": false
+    }
+  }
+]

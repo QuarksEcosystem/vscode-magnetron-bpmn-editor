@@ -1,0 +1,56 @@
+{
+  "name": "vscode-magnetron-bpmn-editor",
+  "displayName": "Quarks Magnetron BPMN Editor",
+  "description": "VS Code Editor for BPMN Features File",
+  "version": "0.0.1",
+  "publisher": "QuarksEcosystem",
+  "engines": {
+    "vscode": "^1.46.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCustomEditor:magnetron.bpmn"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QuarksEcosystem/vscode-magnetron-bpmn-editor"
+  },
+  "main": "./out/extension.js",
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "magnetron.bpmn",
+        "displayName": "Feature BPMN",
+        "selector": [
+          {
+            "filenamePattern": "*.bpmn"
+          }
+        ]
+      }
+    ],
+    "commands": []
+  },
+  "scripts": {
+    "build": "tsc -p ./ && npm run build:assets",
+    "build:assets": "cp -r src/assets out && cp node_modules/bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css out/assets",
+    "lint": "eslint . --ext .ts,.tsx",
+    "watch": "tsc -w -p ./",
+    "package": "npx vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.0",
+    "@types/vscode": "^1.46.0",
+    "@typescript-eslint/eslint-plugin": "^3.0.2",
+    "@typescript-eslint/parser": "^3.0.2",
+    "eslint": "^7.1.0",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "bpmn-js": "^6.5.1",
+    "bpmn-js-properties-panel": "^0.33.1",
+    "bpmn-moddle": "^6.0.2",
+    "camunda-bpmn-moddle": "^4.4.0"
+  }
+}
