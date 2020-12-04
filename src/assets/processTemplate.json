@@ -1,339 +1,1843 @@
 [
-  {
-    "id": "hubProcess",
-    "name": "Hub Process",
-    "isDefault": true,
-    "appliesTo": [
-      "bpmn:Process"
-    ],
-    "properties": [
-      {
-        "type": "Hidden",
-        "value": true,
-        "binding": {
-          "type": "property",
-          "name": "isExecutable"
-        }
-      },
-      {
-        "label": "Validate Long Running Unicity",
-        "description": "Define se haverá validação de unicidade para a execução do fluxo <u>Long Running</u>, mediante chave definida para o mesmo",
-        "type": "Boolean",
-        "value": false,
-        "binding": {
-          "type": "camunda:property",
-          "name": "validateLongRunningUnicity"
-        }
-      },
-      {
-        "label": "Long Running Unicity Key",
-        "description": "Chave para validação de unicidade do fluxo <u>Long Running</u> (<b>Separador:</b> <b>;</b> [<u>ponto e vírgula</u>]) <br><br><b>Chave reservada para acesso ao instance-id:</b> $.processBusinessId<br><br><b>Exemplos:</b><ul><li>$.processBusinessId</li><li>$.processBusinessId;$.id</li><li>$.order.number;$.requestHeaders.correlationId</li></ul>",
-        "type": "String",
-        "binding": {
-          "type": "camunda:property",
-          "name": "longRunningUnicityKey"
-        },
-        "constraints": {
-          "notEmpty": false
-        }
-      }
-    ],
-    "entriesVisible": {
-      "_all": true,
-      "process-is-executable": false,
-      "externalTaskPriority": false,
-      "jobPriority": false,
-      "historyTimeToLive": false,
-      "executionListeners": false,
-      "properties": false,
-      "elementTemplate-chooser": false,
-      "variables": false
-    }
-  },
-  {
-    "id": "hubConditionalFlow",
-    "name": "Hub Conditional Flow",
-    "isDefault": false,
-    "appliesTo": [
-      "bpmn:SequenceFlow"
-    ],
-    "properties": [
-      {
-        "label": "Filter Path",
-        "description": "Path para filtro no contexto de dados (ex: $.pessoa.nome)",
-        "type": "String",
-        "binding": {
-          "type": "camunda:property",
-          "name": "filterPath"
-        },
-        "constraints": {
-          "notEmpty": true
-        }
-      },
-      {
-        "label": "Filter Expression",
-        "description": "Expressão a ser aplicada no contexto de dados (ex: '==')",
-        "type": "Dropdown",
-        "value": "==",
-        "choices": [
-          {
-            "name": "==",
-            "value": "=="
-          },
-          {
-            "name": "=~ (equals with ignore case)",
-            "value": "=~"
-          },
-          {
-            "name": ">",
-            "value": ">"
-          },
-          {
-            "name": ">=",
-            "value": ">="
-          },
-          {
-            "name": "<",
-            "value": "<"
-          },
-          {
-            "name": "<=",
-            "value": "<="
-          },
-          {
-            "name": "!=",
-            "value": "!="
-          },
-          {
-            "name": "contains",
-            "value": "contains"
-          },
-          {
-            "name": "not contains",
-            "value": "not contains"
-          },
-          {
-            "name": "regex",
-            "value": "regex"
-          },
-          {
-            "name": "not regex",
-            "value": "not regex"
-          },
-          {
-            "name": "in",
-            "value": "in"
-          },
-          {
-            "name": "not in",
-            "value": "not in"
-          },
-          {
-            "name": "range",
-            "value": "range"
-          },
-          {
-            "name": "not range",
-            "value": "not range"
-          },
-          {
-            "name": "starts with",
-            "value": "starts with"
-          },
-          {
-            "name": "ends with",
-            "value": "ends with"
-          }
-        ],
-        "binding": {
-          "type": "camunda:property",
-          "name": "filterExpression"
-        },
-        "constraints": {
-          "notEmpty": true
-        }
-      },
-      {
-        "label": "Filter Value or Filter Path",
-        "description": "Valor do filtro <br><br><b>Exemplos:</b><ul><li>$.pessoa.idade</li><li>'fulano de tal'</li><li>'a,b,c'</li><li>100</li><li>'100..200' (range)</li><li>'\\d{4}' (regex)</li></ul>",
-        "type": "String",
-        "binding": {
-          "type": "camunda:property",
-          "name": "filterValue"
-        },
-        "constraints": {
-          "notEmpty": true
-        }
-      }
-    ],
-    "entriesVisible": {
-      "_all": true,
-      "properties": false,
-      "extensionElements": false,
-      "listeners": false,
-      "executionListeners": false,
-      "details": false,
-      "condition": false
-    }
-  },
-  {
-    "id": "hubSimpleConditionalFlow",
-    "name": "Hub Simple Conditional Flow",
-    "isDefault": false,
-    "appliesTo": [
-      "bpmn:SequenceFlow"
-    ],
-    "properties": [
-      {
-        "label": "Filter Expression",
-        "description": "Expressão para filtro no contexto de dados <br><br><b>Exemplos de uso:</b><br><ul><li><u>Verifica existência de nó</u><br><b>$.pessoa.nome</b><br><br></li><li><u>Verifica no array de steps se existe algum item com nome igual a 'ABC'</u><br><b>steps.name == 'ABC'</b></li></ul>",
-        "type": "String",
-        "binding": {
-          "type": "camunda:property",
-          "name": "simpleFilterExpression"
-        },
-        "constraints": {
-          "notEmpty": true
-        }
-      }
-    ],
-    "entriesVisible": {
-      "_all": true,
-      "properties": false,
-      "extensionElements": false,
-      "listeners": false,
-      "executionListeners": false,
-      "details": false,
-      "condition": false
-    }
-  },
-  {
-    "id": "hubBoundaryEvent",
-    "name": "Hub Boundary Event",
-    "isDefault": true,
-    "appliesTo": [
-      "bpmn:BoundaryEvent"
-    ],
-    "properties": [
-      {
-        "label": "Filter Path",
-        "description": "Path para filtro no contexto de dados (ex: $.pessoa.nome)",
-        "type": "String",
-        "binding": {
-          "type": "camunda:property",
-          "name": "filterPath"
-        },
-        "constraints": {
-          "notEmpty": true
-        }
-      },
-      {
-        "label": "Filter Expression",
-        "description": "Expressão a ser aplicada no contexto de dados (ex: '==')",
-        "type": "Dropdown",
-        "value": "==",
-        "choices": [
-          {
-            "name": "==",
-            "value": "=="
-          },
-          {
-            "name": "=~ (equals with ignore case)",
-            "value": "=~"
-          },
-          {
-            "name": ">",
-            "value": ">"
-          },
-          {
-            "name": ">=",
-            "value": ">="
-          },
-          {
-            "name": "<",
-            "value": "<"
-          },
-          {
-            "name": "<=",
-            "value": "<="
-          },
-          {
-            "name": "!=",
-            "value": "!="
-          },
-          {
-            "name": "contains",
-            "value": "contains"
-          },
-          {
-            "name": "not contains",
-            "value": "not contains"
-          },
-          {
-            "name": "regex",
-            "value": "regex"
-          },
-          {
-            "name": "not regex",
-            "value": "not regex"
-          },
-          {
-            "name": "in",
-            "value": "in"
-          },
-          {
-            "name": "not in",
-            "value": "not in"
-          },
-          {
-            "name": "range",
-            "value": "range"
-          },
-          {
-            "name": "not range",
-            "value": "not range"
-          },
-          {
-            "name": "starts with",
-            "value": "starts with"
-          },
-          {
-            "name": "ends with",
-            "value": "ends with"
-          }
-        ],
-        "binding": {
-          "type": "camunda:property",
-          "name": "filterExpression"
-        },
-        "constraints": {
-          "notEmpty": true
-        }
-      },
-      {
-        "label": "Filter Value",
-        "description": "Valor do filtro <br><br><b>Exemplos:</b><ul><li>'fulano de tal'</li><li>'a,b,c'</li><li>100</li><li>'100..200' (range)</li><li>'\\d{4}' (regex)</li></ul>",
-        "type": "String",
-        "binding": {
-          "type": "camunda:property",
-          "name": "filterValue"
-        },
-        "constraints": {
-          "notEmpty": true
-        }
-      }
-    ],
-    "entriesVisible": {
-      "_all": true,
-      "properties": false,
-      "extensionElements": false,
-      "listeners": false,
-      "executionListeners": false,
-      "asyncAfter": false,
-      "asyncBefore": false,
-      "exclusive": false,
-      "errorCodeVariable": false,
-      "errorMessageVariable": false
-    }
-  }
+	{
+		"id": "hubProcess",
+		"name": "Hub Process",
+		"isDefault": true,
+		"appliesTo": [
+			"bpmn:Process"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": true,
+				"binding": {
+					"type": "property",
+					"name": "isExecutable"
+				}
+			},
+			{
+				"label": "Validate Authentication Token",
+				"description": "Define se o token de autenticação deverá ser validado antes de executar a API",
+				"type": "Boolean",
+				"value": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "validateAuthenticationToken"
+				}
+			},
+			{
+				"label": "Validation Token Endpoint",
+				"description": "Endpoint da operação REST para validação do token (protocolo + host + porta)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "authenticationTokenValidateEndpoint"
+				},
+				"constraints": {
+					"notEmpty": false,
+					"pattern": {
+						"value": "http://.*|https://.*",
+						"message": "Must be http or https URL"
+					}
+				}
+			},
+			{
+				"label": "Validate Long Running Unicity",
+				"description": "Define se haverá validação de unicidade para a execução do fluxo <u>Long Running</u>, mediante chave definida para o mesmo",
+				"type": "Boolean",
+				"value": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "validateLongRunningUnicity"
+				}
+			},
+			{
+				"label": "Long Running Unicity Key",
+				"description": "Chave para validação de unicidade do fluxo <u>Long Running</u> (<b>Separador:</b> <b>;</b> [<u>ponto e vírgula</u>]) <br><br><b>Chave reservada para acesso ao instance-id:</b> $.processBusinessId<br><br><b>Exemplos:</b><ul><li>$.processBusinessId</li><li>$.processBusinessId;$.id</li><li>$.order.number;$.requestHeaders.correlationId</li></ul>",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "longRunningUnicityKey"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"process-is-executable": false,
+			"externalTaskPriority": false,
+			"jobPriority": false,
+			"historyTimeToLive": false,
+			"executionListeners": false,
+			"properties": false,
+			"elementTemplate-chooser": false,
+			"variables": false
+		}
+	},
+	{
+		"id": "hubServiceTaskCache",
+		"name": "Cache Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "cache",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			}	
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubServiceTaskEmailSmtp",
+		"name": "Email SMTP Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "smtp",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},     
+			{
+				"label": "Retry Configuration (<u>somente</u> para fluxo <u>Long Running</u>)",
+				"description": "Configuração de retry para task (<a href='javascript:window.open(\"https://en.wikipedia.org/wiki/ISO_8601#Durations\")'>Referência</a>) <br/><b>ex:</b> R3/PT1M - 3 repetições com intervalo de 1 min",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "taskRetryConfiguration"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},	
+			{
+				"label": "SMTP Template Engine",
+				"description": "Engine do template para geração do conteúdo do e-mail",
+				"type": "Dropdown",
+				"value": "mustache",
+				"choices": [
+					{ "name": "Mustache", "value": "mustache" }
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpTemplateEngine"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SMTP Host",
+				"description": "Host para envio do e-mail via smtp",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpHost"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},	
+			{
+				"label": "SMTP Host Port",
+				"description": "Porta do host para envio do e-mail via smtp",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpPort"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SMTP Username",
+				"description": "Usuário para conexão com serviço de smtp",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpUsername"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SMTP Password",
+				"description": "Senha do usuário para conexão com serviço de smtp",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpPassword"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SMTP Content-Type",
+				"description": "Tipo do conteúdo a ser enviado no e-mail (ex: text/html)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpContentType"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SMTP From E-mail",
+				"description": "E-mail de origem",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpFrom"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SMTP Subject E-mail",
+				"description": "Assunto do e-mail",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSmtpSubject"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}		
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubServiceTaskJDBC",
+		"name": "JDBC Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "jdbc",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},    
+			{
+				"label": "Retry Configuration (<u>somente</u> para fluxo <u>Long Running</u>)",
+				"description": "Configuração de retry para task (<a href='javascript:window.open(\"https://en.wikipedia.org/wiki/ISO_8601#Durations\")'>Referência</a>) <br/><b>ex:</b> R3/PT1M - 3 repetições com intervalo de 1 min",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "taskRetryConfiguration"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},	 
+			{
+				"label": "JDBC Catalog/Package",
+				"description": "Nome da package",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCCatalog"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},	
+			{
+				"label": "JDBC Procedure",
+				"description": "Nome da procedure",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCProcedure"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},
+			{
+				"label": "JDBC DataSource Driver Class Name",
+				"description": "Classe do driver para conexão com o banco de dados",
+				"type": "Dropdown",
+				"value": "",
+				"choices": [
+					{ "name": "Apache Derby", "value": "org.apache.derby.jdbc.ClientDataSource" },
+					{ "name": "Firebird (Jaybird)", "value": "org.firebirdsql.ds.FBSimpleDataSource" },
+					{ "name": "H2", "value": "org.h2.jdbcx.JdbcDataSource" },
+					{ "name": "HSQLDB", "value": "org.hsqldb.jdbc.JDBCDataSource" },
+					{ "name": "IBM DB2 (IBM JCC)", "value": "com.ibm.db2.jcc.DB2SimpleDataSource" },
+					{ "name": "IBM Informix", "value": "com.informix.jdbcx.IfxDataSource" },
+					{ "name": "MS SQL Server (Microsoft)", "value": "com.microsoft.sqlserver.jdbc.SQLServerDataSource" },
+					{ "name": "MySQL", "value": "" },
+					{ "name": "MariaDB", "value": "org.mariadb.jdbc.MariaDbDataSource" },
+					{ "name": "Oracle", "value": "oracle.jdbc.pool.OracleDataSource" },
+					{ "name": "OrientDB", "value": "com.orientechnologies.orient.jdbc.OrientDataSource" },
+					{ "name": "PostgreSQL (pgjdbc-ng)", "value": "com.impossibl.postgres.jdbc.PGDataSource" },
+					{ "name": "PostgreSQL", "value": "org.postgresql.ds.PGSimpleDataSource" },
+					{ "name": "SAP MaxDB (SAP)", "value": "com.sap.dbtech.jdbc.DriverSapDB" },
+					{ "name": "SQLite (xerial)", "value": "org.sqlite.SQLiteDataSource" },
+					{ "name": "SyBase (jConnect)", "value": "com.sybase.jdbc4.jdbc.SybDataSource" }
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCDataSourceClassName"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},
+			{
+				"label": "JDBC DataSource URL",
+				"description": "URL para conexão com banco de dados",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCDataSourceUrl"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "JDBC DataSource Username",
+				"description": "Nome do usuário para conexão com banco de dados",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCDataSourceUser"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "JDBC DataSource User Password",
+				"description": "Senha do usuário para conexão com banco de dados",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCDataSourcePassword"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "JDBC DataSource Database Name",
+				"description": "Nome da Base de Dados",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCDataSourceDatabaseName"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "JDBC Connection Timeout",
+				"description": "Tempo em ms para timeout de conexão com o banco de dados<br/><u>Valor mínimo:</u> 250ms",
+				"type": "String",
+				"value": 30000,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCConnectionTimeout"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			},
+			{
+				"label": "JDBC Pool Name",
+				"description": "Nome do Pool de Conexões",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCPoolName"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "JDBC MaximumPoolSize",
+				"description": "Tamanho do pool de conexões",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCMaximumPoolSize"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			},
+			{
+				"label": "JDBC MinimumIdle",
+				"description": "Qtde mínima de conexões no pool",
+				"type": "String",
+				"value": 5,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCMinimumIdle"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			},
+			{
+				"label": "JDBC IdleTimeout",
+				"description": "Tempo máximo em ms para manter uma conexão no estado idle no pool",
+				"type": "String",
+				"value": 60000,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCIdleTimeout"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			},
+			{
+				"label": "JDBC MaxLifetime",
+				"description": "Tempo máximo em ms para manter uma conexão no pool",
+				"type": "String",
+				"value": 600000,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCMaxLifetime"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			},					
+			{
+				"label": "JDBC ValidationTimeout",
+				"description": "Timeout em ms para validação da conexão (esse valor deve ser menor que o connectionTimeout)<br/><u>Valor mínimo:</u> 250ms",
+				"type": "String",
+				"value": 5000,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCValidationTimeout"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			},
+			{
+				"label": "JDBC LeakDetectionThreshold",
+				"description": "Tempo que a conexão pode ficar fora do pool para gerar análise de 'connection leak'.<br/><b>Valor '0'</b> indica que essa verificação está desabilitada.<br/><u>Valor mínimo:</u> 2000ms",
+				"type": "String",
+				"value": "0",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorJDBCLeakDetectionThreshold"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			}			
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubServiceTaskMapping",
+		"name": "Mapping Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "mapping",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubServiceTaskRabbitmq",
+		"name": "RabbitMQ Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "rabbitmq",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},
+			{
+				"label": "RabbitMQ Routing Key",
+				"description": "Rounting Key",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorRabbitMqRoutingKey"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false	
+		}
+	},
+	{
+		"id": "hubServiceTaskREST",
+		"name": "REST Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "rest",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},
+			{
+				"label": "Retry Configuration (<u>somente</u> para fluxo <u>Long Running</u>)",
+				"description": "Configuração de retry para task (<a href='javascript:window.open(\"https://en.wikipedia.org/wiki/ISO_8601#Durations\")'>Referência</a>) <br/><b>ex:</b> R3/PT1M - 3 repetições com intervalo de 1 min",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "taskRetryConfiguration"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},	     
+			{
+				"label": "Reply Connector Errors",
+				"description": "Define se o erro (statusCode e body de response) do conector serão propagados para o fluxo",
+				"type": "Boolean",
+				"value": "true",
+				"binding": {
+					"type": "camunda:property",
+					"name": "replyConnectorErrors"
+				}
+			}, 
+			{
+				"label": "Mapping Response Headers",
+				"description": "Define se os headers de response serão adicionados ao contexto de dados de saída da task (<u>somente</u> para response em json</u>)",
+				"type": "Boolean",
+				"value": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "mappingResponseHeaders"
+				}
+			},        
+			{
+				"label": "REST Endpoint",
+				"description": "Endpoint da operação REST (protocolo + host + porta)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorEndpoint"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "http://.*|https://.*",
+						"message": "Must be http or https URL"
+					}
+				}
+			},			
+			{
+				"label": "REST URI",
+				"description": "URI da operação REST (somente path + parameters)<br><br><b>Exemplos:</b><ul><li>/pessoa/listar</li><li>/pessoa/{id}</li><li>/pessoa/consultar?pagina={pagina}&qtdeRegistros=20</li><li>/pessoa/{tipo}/?pagina={pagina}</li></ul>",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorUri"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},			
+			{
+				"label": "REST Method",
+				"description": "HTTP Method da operação REST",
+				"type": "Dropdown",
+				"value": "POST",
+				"choices": [
+					{ "name": "GET", "value": "GET" },
+					{ "name": "POST", "value": "POST" },
+					{ "name": "PUT", "value": "PUT" },
+					{ "name": "DELETE", "value": "DELETE" }					
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorMethod"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubServiceTaskRESTAuth",
+		"name": "REST Authentication Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "rest",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},
+			{
+				"label": "Retry Configuration (<u>somente</u> para fluxo <u>Long Running</u>)",
+				"description": "Configuração de retry para task (<a href='javascript:window.open(\"https://en.wikipedia.org/wiki/ISO_8601#Durations\")'>Referência</a>) <br/><b>ex:</b> R3/PT1M - 3 repetições com intervalo de 1 min",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "taskRetryConfiguration"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},	
+			{
+				"label": "Reply Connector Errors",
+				"description": "Define se o erro (statusCode e body de response) do conector serão propagados para o fluxo",
+				"type": "Boolean",
+				"value": "true",
+				"binding": {
+					"type": "camunda:property",
+					"name": "replyConnectorErrors"
+				}
+			},     
+			{
+				"label": "Mapping Response Headers",
+				"description": "Define se os headers de response serão adicionados ao contexto de dados de saída da task (<u>somente</u> para response em json</u>)",
+				"type": "Boolean",
+				"value": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "mappingResponseHeaders"
+				}
+			},         
+			{
+				"label": "REST Endpoint",
+				"description": "Endpoint da operação REST (protocolo + host + porta)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorEndpoint"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "http://.*|https://.*",
+						"message": "Must be http or https URL"
+					}
+				}
+			},			
+			{
+				"label": "REST URI",
+				"description": "URI da operação REST (somente path + parameters)<br><br><b>Exemplos:</b><ul><li>/pessoa/listar</li><li>/pessoa/{id}</li><li>/pessoa/consultar?pagina={pagina}&qtdeRegistros=20</li><li>/pessoa/{tipo}/?pagina={pagina}</li></ul>",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorUri"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},			
+			{
+				"label": "REST Method",
+				"description": "HTTP Method da operação REST",
+				"type": "Dropdown",
+				"value": "POST",
+				"choices": [
+					{ "name": "GET", "value": "GET" },
+					{ "name": "POST", "value": "POST" },
+					{ "name": "PUT", "value": "PUT" },
+					{ "name": "DELETE", "value": "DELETE" }					
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorMethod"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "REST Authentication Endpoint",
+				"description": "Endpoint da operação REST de autenticação (protocolo + host + porta)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorAuthEndpoint"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "http://.*|https://.*",
+						"message": "Must be http or https URL"
+					}
+				}
+			},			
+			{
+				"label": "REST Authentication URI",
+				"description": "URI da operação REST de autenticação (somente path + parameters)<br><br><b>Exemplos:</b><ul><li>/pessoa/listar</li><li>/pessoa/{id}</li><li>/pessoa/consultar?pagina={pagina}&qtdeRegistros=20</li><li>/pessoa/{tipo}/?pagina={pagina}</li></ul>",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorAuthUri"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},			
+			{
+				"label": "REST Authentication Method",
+				"description": "HTTP Method da operação REST de autenticação",
+				"type": "Dropdown",
+				"value": "POST",
+				"choices": [
+					{ "name": "GET", "value": "GET" },
+					{ "name": "POST", "value": "POST" },
+					{ "name": "PUT", "value": "PUT" }
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorAuthMethod"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "REST Authentication TTL Cache",
+				"description": "Tempo de cache, <b>em segundos</b>, da informação de autenticação",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorAuthTTL"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "[0-9]{1,}",
+						"message": "Value not allowed."
+					}
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubServiceTaskScraping",
+		"name": "Scraping Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "scraping",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},
+			{
+				"label": "Retry Configuration (<u>somente</u> para fluxo <u>Long Running</u>)",
+				"description": "Configuração de retry para task (<a href='javascript:window.open(\"https://en.wikipedia.org/wiki/ISO_8601#Durations\")'>Referência</a>) <br/><b>ex:</b> R3/PT1M - 3 repetições com intervalo de 1 min",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "taskRetryConfiguration"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubServiceTaskSoap",
+		"name": "SOAP Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "soap",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},
+			{
+				"label": "Retry Configuration (<u>somente</u> para fluxo <u>Long Running</u>)",
+				"description": "Configuração de retry para task (<a href='javascript:window.open(\"https://en.wikipedia.org/wiki/ISO_8601#Durations\")'>Referência</a>) <br/><b>ex:</b> R3/PT1M - 3 repetições com intervalo de 1 min",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "taskRetryConfiguration"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},	
+			{
+				"label": "Connector URL",
+				"description": "URL do conector",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorUrl"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "http://.*|https://.*",
+						"message": "Must be http or https URL"
+					}
+				}
+			},			
+			{
+				"label": "SOAP Operation",
+				"description": "Operation SOAP do conector",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSoapOperation"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SOAP Action",
+				"description": "Action SOAP do conector",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSoapAction"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SOAP Target Packages",
+				"description": "Packages SOAP para binding (separador: ',')",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "targetPackages"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "SOAP Basic Authentication Username",
+				"description": "Usuário para autenticação básica",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSoapUsername"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},
+			{
+				"label": "SOAP Basic Authentication Password",
+				"description": "Senha para autenticação básica",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSoapPassword"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},
+			{
+				"label": "SOAP Header Type",
+				"description": "Classe + package referente ao header a ser enviado na requisição SOAP",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorSoapTargetHeaderType"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},
+			{
+				"label": "Connector URL for WSDL Build",
+				"description": "URL do conector para build do WSDL",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorWsdlBuildUrl"
+				},
+				"constraints": {
+					"notEmpty": false,
+					"pattern": {
+						"value": "http://.*|https://.*",
+						"message": "Must be http or https URL"
+					}
+				}
+			},	
+			{
+				"label": "SOAP Basic Authentication Username for WSDL Build",
+				"description": "Usuário para autenticação básica para build do WSDL",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorWsdlBuildUsername"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},
+			{
+				"label": "SOAP Basic Authentication Password for WSDL Build",
+				"description": "Senha para autenticação básica para build do WSDL",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorWsdlBuildPassword"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false		,
+			"inputs": false,
+			"outputs": false	
+		}
+	},
+	{
+		"id": "hubServiceTaskS3",
+		"name": "S3 Service Task",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:ServiceTask"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": "s3",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorType"
+				}
+			},
+			{
+				"label": "Connector Version",
+				"description": "Versão do conector",
+				"type": "String",
+				"value": "1.0.0",
+				"editable": false,
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorVersion"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			},     
+			{
+				"label": "Retry Configuration (<u>somente</u> para fluxo <u>Long Running</u>)",
+				"description": "Configuração de retry para task (<a href='javascript:window.open(\"https://en.wikipedia.org/wiki/ISO_8601#Durations\")'>Referência</a>) <br/><b>ex:</b> R3/PT1M - 3 repetições com intervalo de 1 min",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "taskRetryConfiguration"
+				},
+				"constraints": {
+					"notEmpty": false
+				}
+			},	
+			{
+				"label": "S3 Bucket Name",
+				"description": "Nome do bucket do S3",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorS3BucketName"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},	
+			{
+				"label": "S3 Region",
+				"description": "Região do S3",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorS3Region"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "S3 Access Key",
+				"description": "Chave de acesso do S3",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorS3AccessKey"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "S3 Secret Key",
+				"description": "Senha para acesso ao S3",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "connectorS3SecretKey"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}		
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false,
+			"resultVariable": false,
+			"externalTopic": false,
+			"configureConnectorLink": false,
+			"inputs": false,
+			"outputs": false		
+		}
+	},
+	{
+		"id": "hubConditionalFlow",
+		"name": "Hub Conditional Flow",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:SequenceFlow"
+		],
+		"properties": [
+			{
+				"label": "Filter Path",
+				"description": "Path para filtro no contexto de dados (ex: $.pessoa.nome)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "filterPath"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "Filter Expression",
+				"description": "Expressão a ser aplicada no contexto de dados (ex: '==')",
+				"type": "Dropdown",
+				"value": "==",
+				"choices": [
+					{ "name": "==", "value": "==" },
+					{ "name": "=~ (equals with ignore case)", "value": "=~" },
+					{ "name": ">", "value": ">" },
+					{ "name": ">=", "value": ">=" },
+					{ "name": "<", "value": "<" },
+					{ "name": "<=", "value": "<=" },
+					{ "name": "!=", "value": "!=" },
+					{ "name": "contains", "value": "contains" },
+					{ "name": "not contains", "value": "not contains" },
+					{ "name": "regex", "value": "regex" },
+					{ "name": "not regex", "value": "not regex" },
+					{ "name": "in", "value": "in" },
+					{ "name": "not in", "value": "not in" },
+					{ "name": "range", "value": "range" },
+					{ "name": "not range", "value": "not range" },
+					{ "name": "starts with", "value": "starts with" },
+					{ "name": "ends with", "value": "ends with" }
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "filterExpression"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "Filter Value or Filter Path",
+				"description": "Valor do filtro <br><br><b>Exemplos:</b><ul><li>$.pessoa.idade</li><li>'fulano de tal'</li><li>'a,b,c'</li><li>100</li><li>'100..200' (range)</li><li>'\\d{4}' (regex)</li></ul>",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "filterValue"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"properties": false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"executionListeners": false,
+			"details": false,
+			"condition": false
+		}
+	},
+	{
+		"id": "hubSimpleConditionalFlow",
+		"name": "Hub Simple Conditional Flow",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:SequenceFlow"
+		],
+		"properties": [
+			{
+				"label": "Filter Expression",
+				"description": "Expressão para filtro no contexto de dados <br><br><b>Exemplos de uso:</b><br><ul><li><u>Verifica existência de nó</u><br><b>$.pessoa.nome</b><br><br></li><li><u>Verifica no array de steps se existe algum item com nome igual a 'ABC'</u><br><b>steps.name == 'ABC'</b></li></ul>",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "simpleFilterExpression"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"properties": false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"executionListeners": false,
+			"details": false,
+			"condition": false
+		}
+	},
+	{
+		"id": "hubParticipant",
+		"name": "Hub Participant",
+		"isDefault": true,
+		"appliesTo": [
+			"bpmn:Participant"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": true,
+				"binding": {
+					"type": "property",
+					"name": "isExecutable"
+				}
+			},
+			{
+				"label": "REST Base URI Path",
+				"description": "URI base para exposição das APIs internas",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "uri"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "Feature Version",
+				"description": "Versão da Feature de Workflow",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "version"
+				},
+				"constraints": {
+					"notEmpty": true,
+					"pattern": {
+						"value": "^(?:(\\d+)\\.){0,2}(\\*|\\d+)$",
+						"message": "Value not allowed. Pattern would be: X or X.Y or X.Y.Z"
+					}
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"process-is-executable": false,
+			"externalTaskPriority": false,
+			"jobPriority": false,
+			"historyTimeToLive": false,
+			"executionListeners": false,
+			"properties": false,
+			"elementTemplate-chooser": false,
+			"variables": false
+		}
+	},
+	{
+		"id": "hubLane",
+		"name": "Hub Lane",
+		"isDefault": true,
+		"appliesTo": [
+			"bpmn:Lane"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"value": true,
+				"binding": {
+					"type": "property",
+					"name": "isExecutable"
+				}
+			},
+			{
+				"label": "REST URI Sub Path",
+				"description": "URI interna da operação REST (esse <b>'sub path'</b> será concatenado com o path principal da API)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "uri"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},			
+			{
+				"label": "REST Method",
+				"description": "HTTP Method da operação REST",
+				"type": "Dropdown",
+				"value": "POST",
+				"choices": [
+					{ "name": "GET", "value": "GET" },
+					{ "name": "POST", "value": "POST" },
+					{ "name": "PUT", "value": "PUT" },
+					{ "name": "DELETE", "value": "DELETE" }					
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "method"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "Path",
+				"description": "Path da lane para execução",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "path"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"process-is-executable": false,
+			"externalTaskPriority": false,
+			"jobPriority": false,
+			"historyTimeToLive": false,
+			"executionListeners": false,
+			"properties": false,
+			"elementTemplate-chooser": false,
+			"variables": false
+		}
+	},	
+	{
+		"id": "hubEndLaneEvent",
+		"name": "Hub End Lane Event",
+		"isDefault": false,
+		"appliesTo": [
+			"bpmn:IntermediateThrowEvent"
+		],
+		"properties": [
+			{
+				"type": "Hidden",
+				"binding": {
+					"type": "camunda:inputParameter",
+					"name": "output-data-mapping",
+					"parameterType": "map"
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"implementation": false,
+			"delegate": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"executionListeners": false,
+			"fields": false,
+			"field-name": false,
+			"field-type": false,
+			"field-value": false,
+			"properties": false,
+			"parameterType-text": false,
+			"parameterType-list": false,
+			"parameterType-script": false,
+			"elementTemplate-chooser": false,
+			"field-injections" : false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"details": false		
+		}
+	},
+	{
+		"id": "hubBoundaryEvent",
+		"name": "Hub Boundary Event",
+		"isDefault": true,
+		"appliesTo": [
+			"bpmn:BoundaryEvent"
+		],
+		"properties": [
+			{
+				"label": "Filter Path",
+				"description": "Path para filtro no contexto de dados (ex: $.pessoa.nome)",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "filterPath"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "Filter Expression",
+				"description": "Expressão a ser aplicada no contexto de dados (ex: '==')",
+				"type": "Dropdown",
+				"value": "==",
+				"choices": [
+					{ "name": "==", "value": "==" },
+					{ "name": "=~ (equals with ignore case)", "value": "=~" },
+					{ "name": ">", "value": ">" },
+					{ "name": ">=", "value": ">=" },
+					{ "name": "<", "value": "<" },
+					{ "name": "<=", "value": "<=" },
+					{ "name": "!=", "value": "!=" },
+					{ "name": "contains", "value": "contains" },
+					{ "name": "not contains", "value": "not contains" },
+					{ "name": "regex", "value": "regex" },
+					{ "name": "not regex", "value": "not regex" },
+					{ "name": "in", "value": "in" },
+					{ "name": "not in", "value": "not in" },
+					{ "name": "range", "value": "range" },
+					{ "name": "not range", "value": "not range" },
+					{ "name": "starts with", "value": "starts with" },
+					{ "name": "ends with", "value": "ends with" }
+				],
+				"binding": {
+					"type": "camunda:property",
+					"name": "filterExpression"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			},
+			{
+				"label": "Filter Value",
+				"description": "Valor do filtro <br><br><b>Exemplos:</b><ul><li>'fulano de tal'</li><li>'a,b,c'</li><li>100</li><li>'100..200' (range)</li><li>'\\d{4}' (regex)</li></ul>",
+				"type": "String",
+				"binding": {
+					"type": "camunda:property",
+					"name": "filterValue"
+				},
+				"constraints": {
+					"notEmpty": true
+				}
+			}
+		],
+		"entriesVisible": {
+			"_all": true,
+			"properties": false,
+			"extensionElements" : false,
+			"listeners" : false,
+			"executionListeners": false,
+			"asyncAfter": false,
+			"asyncBefore": false,
+			"exclusive": false,
+			"errorCodeVariable": false,
+			"errorMessageVariable": false
+		}
+	}
 ]

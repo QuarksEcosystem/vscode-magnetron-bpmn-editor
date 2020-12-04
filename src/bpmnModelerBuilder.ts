@@ -2,7 +2,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { getNonce } from './utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CamundaModdleDescriptor = require('camunda-bpmn-moddle/resources/camunda.json');
