@@ -2,7 +2,7 @@
   "name": "vscode-magnetron-bpmn-editor",
   "displayName": "Quarks Magnetron BPMN Editor",
   "description": "VS Code Editor for BPMN Features File",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "QuarksEcosystem",
   "engines": {
     "vscode": "^1.46.0"
